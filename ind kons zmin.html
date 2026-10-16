@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candle molds</title>
+    <style>
+
+ /* Светлая тема по умолчанию */
+        body {
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 60px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Кнопка темы */
+        .theme-button {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1500;
+        }
+
+
+        /* Стили темной темы */
+        body.dark-mode {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .theme-button {
+            background-color: #333333;
+            color: #ffffff;
+            border-color: #555555;
+        }
+
+              /* СТИЛІ СІТКИ ГАЛЕРЕЇ */
+        .gallery-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* СТИЛІ ПОВНОЕКРАННОГО ПЕРЕГЛЯДУ (ЛАЙТБОКС) */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        .lightbox-img {
+            max-width: 85%;
+            max-height: 85%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            animation: zoom 0.3s ease; 
+        }
+
+        @keyframes zoom {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn, .nav-btn {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            font-size: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover, .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .close-btn { top: 20px; right: 20px; font-size: 35px; }
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+
+    .top-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 10px 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 05);
+        z-index: 1500;
+        box-sizing: border-box;
+    }
+
+    .menu-btn {
+        background: none;
+        border: none;
+        padding: 10px 15px;
+        font-size: 15px;
+        font-weight: bold;
+        color: #7f8c8d;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .menu-btn:hover{
+        color: #3498db;
+        background-color: #f0f4f8;
+    }
+
+    .menu-btn.active {
+        color: #3498db;
+        background-color: #eaf2f8;
+    }
+
+    body.dark-mode .top-menu{
+        background-color: #222222;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode .menu-btn:hover {
+            background-color: #333333;
+        }
+        body.dark-mode .menu-btn.active {
+            background-color: #2980b9;
+            color: #ffffff;
+        }
+
+        @media (max-width: 600px) {
+            .top-menu {
+                overflow-x: auto;
+            }
+        }
+
+
+                /* Кнопки-ссылки меню */
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-decoration: none; /* УДАЛЯЕМ СТАНДАРТНОЕ ПОДЧЕРКИВАНИЕ ССЫЛОК */
+            display: inline-block;
+        }
+
+
+    </style>
+</head>
+<body>
+    
+  <!-- Верхнее меню навигации, открывающее новые вкладки -->
+    <nav class="top-menu">
+        <a href="osnova.html" class="menu-btn">Головна</a>
+        <a href="catalog.html" class="menu-btn">Каталог</a>
+        <a href="ind kons zmin.html" class="menu-btn">Індивідуальні конструктивні зміни</a>
+    </nav>
+
+
+    <!-- Кнопка переключения темы -->
+    <button id="theme-toggle-btn" class="theme-button">🌙 Темна тема</button>
+
+    <h2 id="catalog-section">Закрутки</h2>
+<div class="gallery-container">
+    <div class="gallery-grid">
+        <img src="" class="gallery-item" alt="foto1">
+        <img src="IMG_6817.jpeg" class="gallery-item" alt="foto2">
+    </div>
+</div>
+
+<div id="lightbox-modal" class="lightbox">
+    <button class="close-btn" id="close-lightbox">&times;</button>
+    <button class="nav-btn prev-btn" id="prev-lightbox">&#10094;</button>
+    <img src="" id="lightbox-target-img" class="lightbox-img" alt="Повний екран">
+    <button class="nav-btn next-btn" id="next-lightbox">&#10095;</button>
+</div>
+
+
+ <h2 id="catalog-section">Ручки</h2>
+<div class="gallery-container">
+    <div class="gallery-grid">
+        <img src="" class="gallery-item" alt="foto1">
+        <img src="" class="gallery-item" alt="foto2">
+    </div>
+</div>
+<div id="lightbox-modal" class="lightbox">
+    <button class="close-btn" id="close-lightbox">&times;</button>
+    <button class="nav-btn prev-btn" id="prev-lightbox">&#10094;</button>
+    <img src="" id="lightbox-target-img" class="lightbox-img" alt="Повний екран">
+    <button class="nav-btn next-btn" id="next-lightbox">&#10095;</button>
+</div>
+
+
+ <h2 id="catalog-section">Зацепи для ниток</h2>
+<div class="gallery-container">
+    <div class="gallery-grid">
+        <img src="" class="gallery-item" alt="foto1">
+        <img src="IMG_6818.jpeg" class="gallery-item" alt="foto2">
+    </div>
+</div>
+<div id="lightbox-modal" class="lightbox">
+    <button class="close-btn" id="close-lightbox">&times;</button>
+    <button class="nav-btn prev-btn" id="prev-lightbox">&#10094;</button>
+    <img src="" id="lightbox-target-img" class="lightbox-img" alt="Повний екран">
+    <button class="nav-btn next-btn" id="next-lightbox">&#10095;</button>
+</div>
+
+
+<script>
+
+     // === УМНАЯ ЛОГИКА ТЕМНОЙ ТЕМЫ (С ПАМЯТЬЮ) ===
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+
+    // 1. ПРОВЕРКА ПРИ ЗАГРУЗКЕ: проверяем, какая тема была сохранена ранее
+    const savedTheme = localStorage.getItem('theme');
+
+    // Если в памяти записано 'dark', сразу включаем темную тему
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (toggleBtn) toggleBtn.textContent = '☀️ Світла тема';
+    } else {
+        if (toggleBtn) toggleBtn.textContent = '🌙 Темна тема';
+    }
+
+    // 2. КЛИК ПО КНОПКЕ: переключаем тему и записываем выбор в память
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Проверяем, включилась ли темная тема после клика
+            if (document.body.classList.contains('dark-mode')) {
+                toggleBtn.textContent = '☀️ Світла тема';
+                localStorage.setItem('theme', 'dark'); // Записываем в память 'dark'
+            } else {
+                toggleBtn.textContent = '🌙 Темна тема';
+                localStorage.setItem('theme', 'light'); // Записываем в память 'light'
+            }
+        });
+    }
+    
+
+            // ЛОГІКА ГАЛЕРЕЇ ТА ГОРТАННЯ
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox-modal');
+        const lightboxImg = document.getElementById('lightbox-target-img');
+        const closeBtn = document.getElementById('close-lightbox');
+        const prevBtn = document.getElementById('prev-lightbox');
+        const nextBtn = document.getElementById('next-lightbox');
+
+        let currentIndex = 0; 
+
+        // Відкриття при кліку на фото
+        galleryItems.forEach(function(item, index) {
+            item.addEventListener('click', function() {
+                currentIndex = index; 
+                lightboxImg.src = item.src; 
+                lightbox.style.display = 'flex'; 
+            });
+        });
+
+        // Функція гортання вперед
+        function showNext() {
+            currentIndex = (currentIndex + 1) % galleryItems.length; 
+            lightboxImg.src = galleryItems[currentIndex].src;
+        }
+
+        // Функція гортання назад
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length; 
+            lightboxImg.src = galleryItems[currentIndex].src;
+        }
+
+        nextBtn.addEventListener('click', showNext);
+        prevBtn.addEventListener('click', showPrev);
+
+        // Закриття на хрестик
+        closeBtn.addEventListener('click', function() {
+            lightbox.style.display = 'none';
+        });
+
+        // Закриття при кліку на чорний фон
+        lightbox.addEventListener('click', function(event) {
+            if (event.target === lightbox) {
+                lightbox.style.display = 'none';
+            }
+        });
+
+        // Гортання клавіатурою (стрілочки та Esc)
+        document.addEventListener('keydown', function(event) {
+            if (lightbox.style.display === 'flex') {
+                if (event.key === 'ArrowRight') showNext();
+                if (event.key === 'ArrowLeft') showPrev();
+                if (event.key === 'Escape') lightbox.style.display = 'none';
+            }
+        });
+
+</script>
+
+</body>
+</html>
