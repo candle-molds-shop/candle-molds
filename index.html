@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="descripton" content="Купити якісні форми для відливання воскових свічок">
     <title>Candle molds</title>
     <style>
         /* Светлая тема по умолчанию */
@@ -204,88 +205,164 @@
 
    
 
-    <script>
-           // === УМНАЯ ЛОГИКА ТЕМНОЙ ТЕМЫ (С ПАМЯТЬЮ) ===
-    const toggleBtn = document.getElementById('theme-toggle-btn');
+        <script>
+        // === 1. УМНАЯ ЛОГИКА ТЕМНОЙ ТЕМЫ (С ПАМЯТЬЮ) ===
+        const toggleBtn = document.getElementById('theme-toggle-btn');
+        const savedTheme = localStorage.getItem('theme');
 
-    // 1. ПРОВЕРКА ПРИ ЗАГРУЗКЕ: проверяем, какая тема была сохранена ранее
-    const savedTheme = localStorage.getItem('theme');
-
-    // Если в памяти записано 'dark', сразу включаем темную тему
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (toggleBtn) toggleBtn.textContent = '☀️ Світла тема';
-    } else {
-        if (toggleBtn) toggleBtn.textContent = '🌙 Темна тема';
-    }
-
-    // 2. КЛИК ПО КНОПКЕ: переключаем тему и записываем выбор в память
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            
-            // Проверяем, включилась ли темная тема после клика
-            if (document.body.classList.contains('dark-mode')) {
-                toggleBtn.textContent = '☀️ Світла тема';
-                localStorage.setItem('theme', 'dark'); // Записываем в память 'dark'
-            } else {
-                toggleBtn.textContent = '🌙 Темна тема';
-                localStorage.setItem('theme', 'light'); // Записываем в память 'light'
-            }
-        });
-    }
-
-
-        // 2. Идеальный фабричный метод отправки через FormData
-    const sendBtn = document.getElementById('send-tg-btn');
-
-    sendBtn.addEventListener('click', function() {
-        // Ваши железобетонные и проверенные ключи (БЕЗ ПРОБЕЛОВ)
-        const TELEGRAM_TOKEN = '8700109424:AAFaLyVFw7L7UuZpBeQIAS_sj41Ot7kIn_s';
-        const TELEGRAM_CHAT_ID = '627437224';
-
-        const name = document.getElementById('fb-name').value.trim();
-        const phone = document.getElementById('fb-phone').value.trim();
-        const message = document.getElementById('fb-message').value.trim();
-
-        if (name === '' || phone === '') {
-            alert('Будь ласка, заповніть ім’я та номер телефону!');
-            return; 
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            if (toggleBtn) toggleBtn.textContent = '☀️ Світла тема';
+        } else {
+            if (toggleBtn) toggleBtn.textContent = '🌙 Темна тема';
         }
 
-        const textMessage = "🔔 Нова заявка!\n👤 Ім'я: " + name + "\n📞 Телефон: " + phone + "\n💬 Побажання: " + message;
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    toggleBtn.textContent = '☀️ Світла тема';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    toggleBtn.textContent = '🌙 Темна тема';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
 
-        // Создаем контейнер FormData (имитирует отправку посетителем вручную)
-        const formData = new FormData();
-        formData.append('chat_id', TELEGRAM_CHAT_ID);
-        formData.append('text', textMessage);
+        // === 2. УМНАЯ ЛОГИКА ГАЛЕРЕИ (ОСТАНОВКА + СВАЙПЫ) ===
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox-modal');
+        const lightboxImg = document.getElementById('lightbox-target-img');
+        const closeBtn = document.getElementById('close-lightbox');
+        const prevBtn = document.getElementById('prev-lightbox');
+        const nextBtn = document.getElementById('next-lightbox');
 
-        const telegramUrl = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage";
+        let currentIndex = 0; 
 
-        // Запрос улетает напрямую как чистая форма, Safari её не заблокирует!
-        fetch(telegramUrl, {
-            method: 'POST',
-            body: formData
-        })
-        .then(function(response) {
-            if (response.ok) {
-                alert("Дякуємо! Менеджер зв'яжеться з вами.");
-                // Очищаем поля
-                document.getElementById('fb-name').value = '';
-                document.getElementById('fb-phone').value = '';
-                document.getElementById('fb-message').value = '';
+        // Функция проверки и скрытия стрелочек на границах
+        function updateNavButtons() {
+            if (currentIndex === 0) {
+                prevBtn.style.display = 'none';
             } else {
-                alert("Помилка Telegram. Перевірте, чи не заблокований бот.");
+                prevBtn.style.display = 'flex';
             }
-        })
-        .catch(function(error) {
-            alert("Помилка відправки: " + error.message);
+
+            if (currentIndex === galleryItems.length - 1) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'flex';
+            }
+        }
+
+        function showNext() {
+            if (currentIndex < galleryItems.length - 1) {
+                currentIndex++;
+                lightboxImg.src = galleryItems[currentIndex].src;
+                updateNavButtons();
+            }
+        }
+
+        function showPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                lightboxImg.src = galleryItems[currentIndex].src;
+                updateNavButtons();
+            }
+        }
+
+        nextBtn.addEventListener('click', showNext);
+        prevBtn.addEventListener('click', showPrev);
+
+        // Открытие по клику на фото
+        galleryItems.forEach(function(item, index) {
+            item.addEventListener('click', function() {
+                currentIndex = index; 
+                lightboxImg.src = item.src; 
+                lightbox.style.display = 'flex'; 
+                updateNavButtons();
+            });
         });
-    });
 
-        
+        // Закрытие окна
+        closeBtn.addEventListener('click', function() { lightbox.style.display = 'none'; });
+        lightbox.addEventListener('click', function(event) {
+            if (event.target === lightbox) { lightbox.style.display = 'none'; }
+        });
 
-    
+        // Гортання кнопками клавиатуры
+        document.addEventListener('keydown', function(event) {
+            if (lightbox.style.display === 'flex') {
+                if (event.key === 'ArrowRight') showNext();
+                if (event.key === 'ArrowLeft') showPrev();
+                if (event.key === 'Escape') lightbox.style.display = 'none';
+            }
+        });
+
+        // Жесты пальцем (свайпы) для телефонов
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        lightbox.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+        }, { passive: true });
+
+        lightbox.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50; 
+            if (touchStartX - touchEndX > swipeThreshold) {
+                showNext(); // Свайп влево — следующее фото
+            }
+            if (touchEndX - touchStartX > swipeThreshold) {
+                showPrev(); // Свайп вправо — предыдущее фото
+            }
+        }
+
+        // === 3. ОТПРАВКА В TELEGRAM ЧЕРЕЗ FORMDATA ===
+        const sendBtn = document.getElementById('send-tg-btn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function() {
+                const TELEGRAM_TOKEN = '8700109424:AAFaLyVFw7L7UuZpBeQIAS_sj41Ot7kIn_s';
+                const TELEGRAM_CHAT_ID = '627437224';
+
+                const name = document.getElementById('fb-name').value.trim();
+                const phone = document.getElementById('fb-phone').value.trim();
+                const message = document.getElementById('fb-message').value.trim();
+
+                if (name === '' || phone === '') {
+                    alert('Будь ласка, заповніть ім’я та номер телефону!');
+                    return; 
+                }
+
+                const textMessage = "🔔 Нова заявка!\n👤 Ім'я: " + name + "\n📞 Телефон: " + phone + "\n💬 Побажання: " + message;
+
+                const formData = new FormData();
+                formData.append('chat_id', TELEGRAM_CHAT_ID);
+                formData.append('text', textMessage);
+
+                const telegramUrl = "https://telegram.org" + TELEGRAM_TOKEN + "/sendMessage";
+
+                fetch(telegramUrl, { method: 'POST', body: formData })
+                .then(function(response) {
+                    if (response.ok) {
+                        alert("Дякуємо! Менеджер зв'яжеться з вами.");
+                        document.getElementById('fb-name').value = '';
+                        document.getElementById('fb-phone').value = '';
+                        document.getElementById('fb-message').value = '';
+                    } else {
+                        alert("Помилка Telegram. Перевірте статус бота.");
+                    }
+                })
+                .catch(function(error) {
+                    alert("Помилка відправки: " + error.message);
+                });
+            });
+        }
     </script>
+
 </body>
 </html>
