@@ -91,6 +91,10 @@
             border-radius: 8px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             animation: zoom 0.3s ease; 
+
+            user-select: none;
+            -webkit-user-drag: none;
+            touch-action: none;
         }
 
         @keyframes zoom {
@@ -383,23 +387,22 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Управление жестами пальца (свайпы) для телефонов
-let touchStartX = 0;
+let touchStarX = 0;
 let touchEndX = 0;
 
-lightbox.addEventListener('touchstart', function(event) {
-    touchStartX = event.changedTouches.screenX;
-}, { passive: true });
+lightbox.addEventListener('touchstart', function(event){
+    touchStarX = event.touches.clietnX;
+    handSwipe();
+}, { passive: true});
 
-lightbox.addEventListener('touchend', function(event) {
-    touchEndX = event.changedTouches.screenX;
-    handleSwipe();
-}, { passive: true });
-
-function handleSwipe() {
-    const swipeThreshold = 50; // чувствительность свайпа
-    if (touchStartX - touchEndX > swipeThreshold) showNext(); // смахнули влево -> вперед
-    if (touchEndX - touchStartX > swipeThreshold) showPrev(); // смахнули вправо -> назад
+function handSwipe () {
+    const swipeThreshold = 30;
+    if (touchStarX - touchEndX > swipeThreshold) {
+        showNext ();
+    }
+    if (touchEndX - touchStarX > swipeThreshold) {
+        showPrev();
+    }
 }
 
 
