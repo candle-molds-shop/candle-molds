@@ -320,36 +320,7 @@
         });
     }
 
-            // === ЛОГІКА СВАЙПІВ ДЛЯ ТЕЛЕФОНІВ ===
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        // Фіксуємо точку, де палець торкнувся екрана
-        lightbox.addEventListener('touchstart', function(event) {
-            touchStartX = event.changedTouches[0].screenX;
-        }, { passive: true });
-
-        // Фіксуємо точку, де палець відірвався від екрана
-        lightbox.addEventListener('touchend', function(event) {
-            touchEndX = event.changedTouches[0].screenX;
-            handleSwipe(); // Обробляємо жест
-        }, { passive: true });
-
-        // Функція визначення напрямку свайпу
-        function handleSwipe() {
-            const swipeThreshold = 50; // Мінімальна відстань у пікселях для зарахування свайпу
-            
-            // Свайп вліво (гортаємо вперед)
-            if (touchStartX - touchEndX > swipeThreshold) {
-                showNext();
-            }
-            
-            // Свайп вправо (гортаємо назад)
-            if (touchEndX - touchStartX > swipeThreshold) {
-                showPrev();
-            }
-        }
-    
+        
 
             // ЛОГІКА ГАЛЕРЕЇ ТА ГОРТАННЯ
         const galleryItems = document.querySelectorAll('.gallery-item');
@@ -416,6 +387,37 @@
                 updateNavButtons(); // Проверяем стрелки сразу при открытии окна!
             });
         });
+        
+            // === ЛОГІКА СВАЙПІВ ДЛЯ ТЕЛЕФОНІВ ===
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // Фіксуємо точку, де палець торкнувся екрана
+        lightbox.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+        }, { passive: true });
+
+        // Фіксуємо точку, де палець відірвався від екрана
+        lightbox.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe(); // Обробляємо жест
+        }, { passive: true });
+
+        // Функція визначення напрямку свайпу
+        function handleSwipe() {
+            const swipeThreshold = 50; // Мінімальна відстань у пікселях для зарахування свайпу
+            
+            // Свайп вліво (гортаємо вперед)
+            if (touchStartX - touchEndX > swipeThreshold) {
+                showNext();
+            }
+            
+            // Свайп вправо (гортаємо назад)
+            if (touchEndX - touchStartX > swipeThreshold) {
+                showPrev();
+            }
+        }
+    
 
 
         // Закриття на хрестик
