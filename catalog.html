@@ -387,23 +387,29 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-let touchStarX = 0;
+// === НОВИЙ БЛОК СВАЙПІВ (ВСТАВЛЯЄМО СЮДИ) ===
+let touchStartX = 0;
 let touchEndX = 0;
 
-lightbox.addEventListener('touchstart', function(event){
-    touchStarX = event.touches.clietnX;
-    handSwipe();
-}, { passive: true});
+lightbox.addEventListener('touchstart', function(event) {
+    touchStartX = event.touches.clientX;
+}, { passive: true });
 
-function handSwipe () {
-    const swipeThreshold = 30;
-    if (touchStarX - touchEndX > swipeThreshold) {
-        showNext ();
+lightbox.addEventListener('touchend', function(event) {
+    touchEndX = event.changedTouches.clientX;
+    handleSwipe();
+}, { passive: true });
+
+function handleSwipe() {
+    const swipeThreshold = 30; // Чутливість свайпу (30 пікселів)
+    if (touchStartX - touchEndX > swipeThreshold) {
+        showNext(); // Свайп вліво — наступне фото
     }
-    if (touchEndX - touchStarX > swipeThreshold) {
-        showPrev();
+    if (touchEndX - touchStartX > swipeThreshold) {
+        showPrev(); // Свайп вправо — попереднє фото
     }
 }
+
 
 
 </script>
