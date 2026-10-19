@@ -387,28 +387,52 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// === НОВИЙ БЛОК СВАЙПІВ (ВСТАВЛЯЄМО СЮДИ) ===
+// === БРОНЕБОЙНЫЙ БЛОК СВАЙПОВ ДЛЯ SAFARI (ЗАМЕНИТЕ СТАРЫЙ) ===
 let touchStartX = 0;
+let touchStartY = 0;
 let touchEndX = 0;
+let touchEndY = 0;
 
-lightbox.addEventListener('touchstart', function(event) {
-    touchStartX = event.touches.clientX;
-}, { passive: true });
+// Вешаем событие прямо на картинку и на всё окно одновременно
+const swipeTargets = [document.getElementById('lightbox-modal'), document.getElementById('lightbox-target-img')];
 
-lightbox.addEventListener('touchend', function(event) {
-    touchEndX = event.changedTouches.clientX;
-    handleSwipe();
-}, { passive: true });
+swipeTargets.forEach(function(target) {
+    if (!target) return;
+
+    target.addEventListener('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+    }, { passive: true });
+
+    target.addEventListener('touchmove', function(event) {
+        // Запрещаем Safari включать системный скролл страницы и перетаскивание картинки во время свайпа!
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+    }, { passive: false }); // Тут обязательно false, чтобы предотвратить дефолтное поведение
+
+    target.addEventListener('touchend', function(event) {
+        touchEndX = event.changedTouches[0].clientX;
+        touchEndY = event.changedTouches[0].clientY;
+        handleSwipe();
+    }, { passive: true });
+});
 
 function handleSwipe() {
-    const swipeThreshold = 30; // Чутливість свайпу (30 пікселів)
-    if (touchStartX - touchEndX > swipeThreshold) {
-        showNext(); // Свайп вліво — наступне фото
-    }
-    if (touchEndX - touchStartX > swipeThreshold) {
-        showPrev(); // Свайп вправо — попереднє фото
+    const swipeThreshold = 40; // Чувствительность в пикселях
+    const xDiff = touchStartX - touchEndX;
+    const yDiff = touchStartY - touchEndY;
+
+    // Проверяем, что жест был именно горизонтальным (влево-вправо), а не вертикальным скроллом
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > swipeThreshold) {
+            showNext(); // Смахнули влево — следующее фото
+        } else if (xDiff < -swipeThreshold) {
+            showPrev(); // Смахнули вправо — предыдущее фото
+        }
     }
 }
+
 
 
 
