@@ -112,6 +112,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            z-index: 2100;
         }
 
         .close-btn:hover, .nav-btn:hover { background: rgba(255,255,255,0.3); }
@@ -319,127 +320,88 @@
             }
         });
     }
-
-        
-
-            // ЛОГІКА ГАЛЕРЕЇ ТА ГОРТАННЯ
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        const lightbox = document.getElementById('lightbox-modal');
-        const lightboxImg = document.getElementById('lightbox-target-img');
-        const closeBtn = document.getElementById('close-lightbox');
-        const prevBtn = document.getElementById('prev-lightbox');
-        const nextBtn = document.getElementById('next-lightbox');
-
-        let currentIndex = 0; 
-
-        // Відкриття при кліку на фото
-        galleryItems.forEach(function(item, index) {
-            item.addEventListener('click', function() {
-                currentIndex = index; 
-                lightboxImg.src = item.src; 
-                lightbox.style.display = 'flex'; 
-            });
-        });
-
-               // Функция проверки и скрытия стрелочек, если листать некуда
-        function updateNavButtons() {
-            // Если мы на первой фотке (индекс 0) — прячем левую стрелку, иначе показываем
-            if (currentIndex === 0) {
-                prevBtn.style.display = 'none';
-            } else {
-                prevBtn.style.display = 'flex';
-            }
-
-            // Если мы на последней фотке — прячем правую стрелку, иначе показываем
-            if (currentIndex === galleryItems.length - 1) {
-                nextBtn.style.display = 'none';
-            } else {
-                nextBtn.style.display = 'flex';
-            }
-        }
-
-        // Обновленная функция гортания вперед (с остановкой)
-        function showNext() {
-            // Листаем вперед только если текущий индекс МЕНЬШЕ, чем индекс последней фотки
-            if (currentIndex < galleryItems.length - 1) {
-                currentIndex++;
-                lightboxImg.src = galleryItems[currentIndex].src;
-                updateNavButtons(); // Проверяем, не дошли ли до конца
-            }
-        }
-
-        // Обновленная функция гортания назад (с остановкой)
-        function showPrev() {
-            // Листаем назад только если мы еще не на самой первой фотке (индекс > 0)
-            if (currentIndex > 0) {
-                currentIndex--;
-                lightboxImg.src = galleryItems[currentIndex].src;
-                updateNavButtons(); // Проверяем, не дошли ли до начала
-            }
-        }
-
-        // Обновляем событие клика для открытия фото, чтобы стрелочки сразу проверялись
-        galleryItems.forEach(function(item, index) {
-            item.addEventListener('click', function() {
-                currentIndex = index; 
-                lightboxImg.src = item.src; 
-                lightbox.style.display = 'flex'; 
-                updateNavButtons(); // Проверяем стрелки сразу при открытии окна!
-            });
-        });
-        
-            // === ЛОГІКА СВАЙПІВ ДЛЯ ТЕЛЕФОНІВ ===
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        // Фіксуємо точку, де палець торкнувся екрана
-        lightbox.addEventListener('touchstart', function(event) {
-            touchStartX = event.changedTouches[0].screenX;
-        }, { passive: true });
-
-        // Фіксуємо точку, де палець відірвався від екрана
-        lightbox.addEventListener('touchend', function(event) {
-            touchEndX = event.changedTouches[0].screenX;
-            handleSwipe(); // Обробляємо жест
-        }, { passive: true });
-
-        // Функція визначення напрямку свайпу
-        function handleSwipe() {
-            const swipeThreshold = 50; // Мінімальна відстань у пікселях для зарахування свайпу
-            
-            // Свайп вліво (гортаємо вперед)
-            if (touchStartX - touchEndX > swipeThreshold) {
-                showNext();
-            }
-            
-            // Свайп вправо (гортаємо назад)
-            if (touchEndX - touchStartX > swipeThreshold) {
-                showPrev();
-            }
-        }
     
 
+          // === РОЗУМНА ЛОГІКА ГАЛЕРЕЇ (КЛІКИ + КЛАВІАТУРА + СВАЙПИ З ТЕЛЕФОНУ) ===
+const galleryItems = document.querySelectorAll('.gallery-item');
+const lightbox = document.getElementById('lightbox-modal');
+const lightboxImg = document.getElementById('lightbox-target-img');
+const closeBtn = document.getElementById('close-lightbox');
+const prevBtn = document.getElementById('prev-lightbox');
+const nextBtn = document.getElementById('next-lightbox');
 
-        // Закриття на хрестик
-        closeBtn.addEventListener('click', function() {
-            lightbox.style.display = 'none';
-        });
+let currentIndex = 0;
 
-        // Закриття при кліку на чорний фон
-        lightbox.addEventListener('click', function(event) {
-            if (event.target === lightbox) {
-                lightbox.style.display = 'none';
-            }
-        });
+// Функция проверки границ галереи
+function updateNavButtons() {
+    prevBtn.style.display = (currentIndex === 0) ? 'none' : 'flex';
+    nextBtn.style.display = (currentIndex === galleryItems.length - 1) ? 'none' : 'flex';
+}
 
-        // Гортання клавіатурою (стрілочки та Esc)
-        document.addEventListener('keydown', function(event) {
-            if (lightbox.style.display === 'flex') {
-                if (event.key === 'ArrowRight') showNext();
-                if (event.key === 'ArrowLeft') showPrev();
-                if (event.key === 'Escape') lightbox.style.display = 'none';
-            }
-        });
+function showNext() {
+    if (currentIndex < galleryItems.length - 1) {
+        currentIndex++;
+        lightboxImg.src = galleryItems[currentIndex].src;
+        updateNavButtons();
+    }
+}
+
+function showPrev() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        lightboxImg.src = galleryItems[currentIndex].src;
+        updateNavButtons();
+    }
+}
+
+// Защита кликов: кликаем по стрелкам на экране, и окно НЕ закрывается
+nextBtn.addEventListener('click', function(e) { e.stopPropagation(); showNext(); });
+prevBtn.addEventListener('click', function(e) { e.stopPropagation(); showPrev(); });
+
+// Открытие окон по клику на картинку-миниатюру
+galleryItems.forEach(function(item, index) {
+    item.addEventListener('click', function() {
+        currentIndex = index;
+        lightboxImg.src = item.src;
+        lightbox.style.display = 'flex';
+        updateNavButtons();
+    });
+});
+
+// Закрытие модального окна
+closeBtn.addEventListener('click', function() { lightbox.style.display = 'none'; });
+lightbox.addEventListener('click', function(event) {
+    if (event.target === lightbox) { lightbox.style.display = 'none'; }
+});
+
+// Управление с клавиатуры ПК
+document.addEventListener('keydown', function(event) {
+    if (lightbox.style.display === 'flex') {
+        if (event.key === 'ArrowRight') showNext();
+        if (event.key === 'ArrowLeft') showPrev();
+        if (event.key === 'Escape') lightbox.style.display = 'none';
+    }
+});
+
+// Управление жестами пальца (свайпы) для телефонов
+let touchStartX = 0;
+let touchEndX = 0;
+
+lightbox.addEventListener('touchstart', function(event) {
+    touchStartX = event.changedTouches.screenX;
+}, { passive: true });
+
+lightbox.addEventListener('touchend', function(event) {
+    touchEndX = event.changedTouches.screenX;
+    handleSwipe();
+}, { passive: true });
+
+function handleSwipe() {
+    const swipeThreshold = 50; // чувствительность свайпа
+    if (touchStartX - touchEndX > swipeThreshold) showNext(); // смахнули влево -> вперед
+    if (touchEndX - touchStartX > swipeThreshold) showPrev(); // смахнули вправо -> назад
+}
+
 
 </script>
 
