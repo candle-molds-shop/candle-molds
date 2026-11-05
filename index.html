@@ -171,7 +171,44 @@
             color: #ffffff;
             border-color: #555555;
         }
-       
+
+        .catalog-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 28px;
+  background: #342d26;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.catalog-button:hover {
+  background: #796650;
+  transform: translateY(-2px);
+}
+       .catalog-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: fit-content;
+  margin: 20px auto;
+  padding: 16px 28px;
+  background: #342d26;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.catalog-button:hover {
+  background: #796650;
+  transform: translateY(-2px);
+}
     </style>
 </head>
 <body>
@@ -186,10 +223,14 @@
 
     <button id="theme-toggle-btn" class="theme-button">🌙 Темна тема</button>
 
-    <h1 id="welcome-title">Привіт!</h1>
-    <p id="welcome-text">Тут ви можете замовити форму для відливання воскових свічок.</p>
+    <h1 id="welcome-title">Замов форми під себе</h1>
+    <p id="welcome-text">Форми для відливання воскових свічок.</p>
+   <a href="catalog.html" class="catalog-button">
+  ПЕРЕЙТИ ДО КАТАЛОГУ <span>→</span>
+</a>
 
-    <img src="svichka.jpg" alt="Моя фотография" class="site-img">
+
+    
 
      <h1>Зворотній зв'язок</h1>
     <div class="feedback-form">

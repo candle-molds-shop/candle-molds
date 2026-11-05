@@ -216,6 +216,53 @@
         }
 
 
+/* СТИЛЬНІ ЗАГОЛОВКИ КАТЕГОРІЙ */
+
+h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #526b80;
+    letter-spacing: 0.6px;
+
+    margin: 65px auto 30px;
+    padding: 0 20px 14px;
+
+    width: fit-content;
+    position: relative;
+}
+
+/* Декоративна лінія */
+h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    width: 70%;
+    height: 3px;
+    border-radius: 10px;
+
+    background: linear-gradient(
+        to right,
+        #b8d5e8,
+        #5d9fc9,
+        #b8d5e8
+    );
+}
+
+/* Темна тема */
+body.dark-mode h2 {
+    color: #dceaf5;
+}
+
+body.dark-mode h2::after {
+    background: linear-gradient(
+        to right,
+        #34495e,
+        #3498db,
+        #34495e
+    );
+}
+
     </style>
 </head>
 <body>
